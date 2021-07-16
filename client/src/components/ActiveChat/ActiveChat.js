@@ -8,15 +8,19 @@ const useStyles = makeStyles(() => ({
   root: {
     display: "flex",
     flexGrow: 8,
-    flexDirection: "column"
+    flexDirection: "column",
+    height: '100%'
   },
   chatContainer: {
-    marginLeft: 41,
-    marginRight: 41,
     display: "flex",
     flexDirection: "column",
     flexGrow: 1,
-    justifyContent: "space-between"
+    justifyContent: "space-between",
+    overflowY: 'hidden'
+  },
+  messages: {
+    flexGrow: 1,
+    overflowY: 'auto'
   }
 }));
 

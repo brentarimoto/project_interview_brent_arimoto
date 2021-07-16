@@ -8,6 +8,8 @@ const styles = {
   root: {
     justifySelf: "flex-end",
     marginTop: 15,
+    paddingLeft: 41,
+    paddingRight: 41,
   },
   input: {
     height: 70,
