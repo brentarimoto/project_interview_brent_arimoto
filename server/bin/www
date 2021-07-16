@@ -36,12 +36,13 @@ io.on("connection", (socket) => {
     if (!onlineUsers.includes(id)) {
       onlineUsers.push(id);
     }
+    socket.join(id)
     // send the user who just went online to everyone else who is already online
     socket.broadcast.emit("add-online-user", id);
   });
 
   socket.on("new-message", (data) => {
-    socket.broadcast.emit("new-message", {
+    socket.to(data.recipientId).emit("new-message", {
       message: data.message,
       sender: data.sender,
     });
