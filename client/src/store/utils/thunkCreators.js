@@ -109,6 +109,20 @@ export const postMessage = (body) => async (dispatch) => {
   }
 };
 
+// message format to send: {recipientId, text, conversationId}
+// conversationId will be set to null if its a brand new conversation
+export const readMessages = (body) => async (dispatch) => {
+  try {
+    console.log('TEST',body)
+    const { data } = await axios.put("/api/messages", body);
+
+    // dispatch(readConversation(body.recipientId))
+
+  } catch (error) {
+    console.error(error);
+  }
+};
+
 export const searchUsers = (searchTerm) => async (dispatch) => {
   try {
     const { data } = await axios.get(`/api/users/${searchTerm}`);

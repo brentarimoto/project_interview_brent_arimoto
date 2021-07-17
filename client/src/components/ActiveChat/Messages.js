@@ -14,6 +14,7 @@ const useStyles = makeStyles(() => ({
     flexDirection: 'column-reverse',
   }
 }));
+
 const Messages = (props) => {
   const classes = useStyles();
   const { messages, otherUser, userId } = props;
@@ -24,7 +25,7 @@ const Messages = (props) => {
         const time = moment(message.createdAt).format("h:mm");
 
         return message.senderId === userId ? (
-          <SenderBubble key={message.id} text={message.text} time={time} />
+          <SenderBubble key={message.id} text={message.text} time={time} read={message.read} otherUser={otherUser}/>
         ) : (
           <OtherUserBubble key={message.id} text={message.text} time={time} otherUser={otherUser} />
         );

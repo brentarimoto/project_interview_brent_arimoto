@@ -15,6 +15,7 @@ const REMOVE_OFFLINE_USER = "REMOVE_OFFLINE_USER";
 const SET_SEARCHED_USERS = "SET_SEARCHED_USERS";
 const CLEAR_SEARCHED_USERS = "CLEAR_SEARCHED_USERS";
 const ADD_CONVERSATION = "ADD_CONVERSATION";
+const READ_CONVERSATION = "READ_CONVERSATION";
 
 // ACTION CREATORS
 
@@ -67,6 +68,14 @@ export const addConversation = (recipientId, newMessage) => {
   };
 };
 
+// set all messages to read
+export const readConversation = (recipientId) => {
+  return {
+    type: ADD_CONVERSATION,
+    payload: { recipientId },
+  };
+};
+
 // REDUCER
 
 const reducer = (state = [], action) => {
@@ -90,6 +99,11 @@ const reducer = (state = [], action) => {
         state,
         action.payload.recipientId,
         action.payload.newMessage
+      );
+    case READ_CONVERSATION:
+      return addNewConvoToStore(
+        state,
+        action.payload.recipientId
       );
     default:
       return state;

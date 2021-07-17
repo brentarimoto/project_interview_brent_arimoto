@@ -8,6 +8,7 @@ router.post("/", async (req, res, next) => {
     if (!req.user) {
       return res.sendStatus(401);
     }
+
     const senderId = req.user.id;
     const { recipientId, text, conversationId, sender } = req.body;
 
@@ -32,6 +33,7 @@ router.post("/", async (req, res, next) => {
         sender.online = true;
       }
     }
+
     const message = await Message.create({
       senderId,
       text,
@@ -42,5 +44,28 @@ router.post("/", async (req, res, next) => {
     next(error);
   }
 });
+
+
+// expects {id } in body
+router.put("/", async (req, res, next) => {
+  try {
+    if (!req.user) {
+      return res.sendStatus(401);
+    }
+
+    const { readMessages } = req.body;
+    console.log(req.body)
+
+    readMessages.forEach(async (id)=>{
+      const message = await Message.findByPk(id)
+      message.read=true
+      await message.save()
+    })
+
+    res.json({ success:true });
+  } catch (error) {
+    next(error);
+  }
+});6
 
 module.exports = router;
