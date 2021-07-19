@@ -23,6 +23,7 @@ const styles = {
     height: 'min-content',
     display: 'flex',
     padding: theme.spacing(0, 1),
+    marginRight: theme.spacing(1),
     boxSizing: 'border-box',
     justifyContent: 'center',
     alignItems: 'center',
