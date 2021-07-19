@@ -20,13 +20,23 @@ const Messages = (props) => {
   const classes = useStyles();
   const { messages, otherUser, userId } = props;
 
+  const latestReadMessage = messages.find((message)=>{
+    return message.senderId===userId && message.read
+  });
+
   return (
     <Box className={classes.messages}>
       {messages.map((message) => {
         const time = moment(message.createdAt).format("h:mm");
 
         return message.senderId === userId ? (
-          <SenderBubble key={message.id} text={message.text} time={time} read={message.read} otherUser={otherUser}/>
+          <SenderBubble
+            key={message.id}
+            text={message.text}
+            time={time}
+            otherUser={otherUser}
+            latestReadMessage={message.id === latestReadMessage.id ? true : false}
+          />
         ) : (
           <OtherUserBubble key={message.id} text={message.text} time={time} otherUser={otherUser} />
         );
