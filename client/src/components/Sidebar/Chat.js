@@ -46,6 +46,7 @@ class Chat extends Component {
     const messageCount = this.props.conversation.messages.filter((message)=>{
       return !message.read && message.senderId !== userId
     }).length || null
+    console.log(messageCount)
 
     return (
       <Box
@@ -62,7 +63,7 @@ class Chat extends Component {
         {messageCount &&
           <Box
             className={classes.notification}
-          >{1}</Box>
+          >{messageCount}</Box>
         }
       </Box>
     );
