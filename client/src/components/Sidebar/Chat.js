@@ -5,6 +5,7 @@ import { withStyles } from "@material-ui/core/styles";
 import { setActiveChat } from "../../store/activeConversation";
 import { connect } from "react-redux";
 import { readMessages } from "../../store/utils/thunkCreators";
+import { theme } from "../../themes/theme";
 
 const styles = {
   root: {
@@ -22,31 +23,20 @@ const styles = {
     width: 22,
     height: 22,
     display: 'flex',
+    padding: theme.spacing(0, 2),
+    boxSizing: 'border-box',
     justifyContent: 'center',
     alignItems: 'center',
     color: "#FFFFFF",
     fontSize:'85%',
     backgroundImage: "linear-gradient(225deg, #6CC1FF 0%, #3A8DFF 100%)",
-    borderRadius: "50%",
+    borderRadius: "11px",
   }
 };
 
 class Chat extends Component {
   handleClick = async (conversation, userId) => {
     await this.props.setActiveChat(conversation.otherUser.username);
-
-    const readMessages = []
-
-    conversation.messages.forEach((message)=>{
-      if (!message.read && message.senderId !== userId){
-        readMessages.push(message.id)
-      }
-    })
-
-    if (readMessages.length){
-      await this.props.setReadMessages({otherUserId: conversation.otherUser.id, readMessages})
-    }
-
   };
 
 
@@ -84,10 +74,7 @@ const mapDispatchToProps = (dispatch) => {
   return {
     setActiveChat: (id) => {
       dispatch(setActiveChat(id));
-    },
-    setReadMessages: (body) => {
-      dispatch(readMessages(body));
-    },
+    }
   };
 };
 

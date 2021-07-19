@@ -1,8 +1,9 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import { Box } from "@material-ui/core";
 import { Input, Header, Messages } from "./index";
-import { connect } from "react-redux";
+import { connect, useDispatch } from "react-redux";
+import { readMessages } from "../../store/utils/thunkCreators";
 
 const useStyles = makeStyles(() => ({
   root: {
@@ -25,9 +26,33 @@ const useStyles = makeStyles(() => ({
 }));
 
 const ActiveChat = (props) => {
+
+  const dispatch = useDispatch()
+
   const classes = useStyles();
-  const { user } = props;
+  const { user, activeConversation } = props;
   const conversation = props.conversation || {};
+
+  useEffect(()=>{
+    if(activeConversation){
+      (async()=>{
+
+        const messageIds = []
+
+        conversation.messages.forEach((message)=>{
+          if (!message.read && message.senderId !== user.id){
+            messageIds.push(message.id)
+          }
+        })
+
+        if (messageIds.length){
+          await dispatch(readMessages({otherUserId: conversation.otherUser.id, readMessages:messageIds}))
+        }
+
+      })()
+
+    }
+  },[activeConversation])
 
   return (
     <Box className={classes.root}>
@@ -62,7 +87,8 @@ const mapStateToProps = (state) => {
       state.conversations &&
       state.conversations.find(
         (conversation) => conversation.otherUser.username === state.activeConversation
-      )
+      ),
+    activeConversation:state.activeConversation
   };
 };
 

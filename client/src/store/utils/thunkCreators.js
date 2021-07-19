@@ -89,6 +89,7 @@ const sendMessage = (data, body) => {
     message: data.message,
     recipientId: body.recipientId,
     sender: data.sender,
+    senderUsername: body.senderUsername
   });
 };
 
@@ -118,8 +119,8 @@ export const postMessage = (body) => async (dispatch) => {
   }
 };
 
-// message format to send: {recipientId, text, conversationId}
-// conversationId will be set to null if its a brand new conversation
+
+// Sets all specified messages to read in backend and redux, sets socket emit to other user as well
 export const readMessages = (body) => async (dispatch) => {
   try {
     const { data } = await axios.put("/api/messages", body);
@@ -131,6 +132,18 @@ export const readMessages = (body) => async (dispatch) => {
   } catch (error) {
     console.error(error);
   }
+};
+
+// Handles new incoming messages, and sees if conversation is already active
+export const handleNewMessage = ({message, sender, senderUsername}) => async (dispatch, getState) => {
+  const state = getState()
+
+  if (state.activeConversation === senderUsername){
+    message.read = true
+    sendReadStatus({userId: state.user.id}, {otherUserId:message.senderId, readMessages:[message.id]})
+  }
+
+  dispatch(setNewMessage(message, sender))
 };
 
 export const searchUsers = (searchTerm) => async (dispatch) => {

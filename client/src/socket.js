@@ -6,6 +6,7 @@ import {
   addOnlineUser,
   readConversation,
 } from "./store/conversations";
+import { handleNewMessage } from './store/utils/thunkCreators'
 
 const socket = io(window.location.origin);
 
@@ -21,7 +22,8 @@ socket.on("connect", () => {
   });
 
   socket.on("new-message", (data) => {
-    store.dispatch(setNewMessage(data.message, data.sender));
+    store.dispatch(handleNewMessage(data))
+    // store.dispatch(setNewMessage(data.message, data.sender));
   });
 
   socket.on("read-messages", (data) => {
