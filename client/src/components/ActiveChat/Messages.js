@@ -2,14 +2,15 @@ import React from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import { Box } from "@material-ui/core";
 import { SenderBubble, OtherUserBubble } from "../ActiveChat";
+import {theme} from '../../themes/theme'
+
 import moment from "moment";
 
 const useStyles = makeStyles(() => ({
   messages: {
     flex: 1,
     overflowY: 'auto',
-    paddingLeft: 41,
-    paddingRight: 41,
+    padding: theme.spacing(0, 5),
     display: 'flex',
     flexDirection: 'column-reverse',
   }

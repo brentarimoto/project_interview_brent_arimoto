@@ -3,13 +3,13 @@ import { FormControl, FilledInput } from "@material-ui/core";
 import { withStyles } from "@material-ui/core/styles";
 import { connect } from "react-redux";
 import { postMessage } from "../../store/utils/thunkCreators";
+import {theme} from '../../themes/theme'
 
 const styles = {
   root: {
     justifySelf: "flex-end",
     marginTop: 15,
-    paddingLeft: 41,
-    paddingRight: 41,
+    padding: theme.spacing(0, 5),
   },
   input: {
     height: 70,

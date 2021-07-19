@@ -113,7 +113,6 @@ export const postMessage = (body) => async (dispatch) => {
 // conversationId will be set to null if its a brand new conversation
 export const readMessages = (body) => async (dispatch) => {
   try {
-    console.log('TEST',body)
     const { data } = await axios.put("/api/messages", body);
 
     // dispatch(readConversation(body.recipientId))
