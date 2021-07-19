@@ -48,6 +48,10 @@ io.on("connection", (socket) => {
     });
   });
 
+  socket.on("read-messages", (data) => {
+    socket.to(data.userId).emit("read-messages", data);
+  });
+
   socket.on("logout", (id) => {
     if (onlineUsers.includes(id)) {
       userIndex = onlineUsers.indexOf(id);

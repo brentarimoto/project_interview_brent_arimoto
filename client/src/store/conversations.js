@@ -4,6 +4,7 @@ import {
   addSearchedUsersToStore,
   removeOfflineUserFromStore,
   addMessageToStore,
+  setMessagesToRead,
 } from "./utils/reducerFunctions";
 
 // ACTIONS
@@ -69,10 +70,10 @@ export const addConversation = (recipientId, newMessage) => {
 };
 
 // set all messages to read
-export const readConversation = (recipientId) => {
+export const readConversation = (otherUserId, readMessages) => {
   return {
-    type: ADD_CONVERSATION,
-    payload: { recipientId },
+    type: READ_CONVERSATION,
+    payload: { otherUserId, readMessages},
   };
 };
 
@@ -101,9 +102,10 @@ const reducer = (state = [], action) => {
         action.payload.newMessage
       );
     case READ_CONVERSATION:
-      return addNewConvoToStore(
+      return setMessagesToRead(
         state,
-        action.payload.recipientId
+        action.payload.otherUserId,
+        action.payload.readMessages
       );
     default:
       return state;

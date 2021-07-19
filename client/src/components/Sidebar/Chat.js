@@ -44,7 +44,7 @@ class Chat extends Component {
     })
 
     if (readMessages.length){
-      await this.props.setReadMessages({readMessages})
+      await this.props.setReadMessages({otherUserId: conversation.otherUser.id, readMessages})
     }
 
   };

@@ -68,6 +68,7 @@ router.put("/", async (req, res, next) => {
       return res.sendStatus(401);
     }
 
+    const userId = req.user.id;
     const { readMessages } = req.body;
 
     readMessages.forEach(async (id)=>{
@@ -76,7 +77,7 @@ router.put("/", async (req, res, next) => {
       await message.save()
     })
 
-    res.json({ success:true });
+    res.json({userId});
   } catch (error) {
     next(error);
   }
