@@ -4,7 +4,6 @@ import { BadgeAvatar, ChatContent } from "../Sidebar";
 import { withStyles } from "@material-ui/core/styles";
 import { setActiveChat } from "../../store/activeConversation";
 import { connect } from "react-redux";
-import { readMessages } from "../../store/utils/thunkCreators";
 import { theme } from "../../themes/theme";
 
 const styles = {
@@ -20,17 +19,17 @@ const styles = {
     },
   },
   notification:{
-    width: 22,
-    height: 22,
+    width: 'min-content',
+    height: 'min-content',
     display: 'flex',
-    padding: theme.spacing(0, 2),
+    padding: theme.spacing(0, 1),
     boxSizing: 'border-box',
     justifyContent: 'center',
     alignItems: 'center',
     color: "#FFFFFF",
-    fontSize:'85%',
+    fontSize:'100%',
     backgroundImage: "linear-gradient(225deg, #6CC1FF 0%, #3A8DFF 100%)",
-    borderRadius: "11px",
+    borderRadius: "10px",
   }
 };
 
@@ -59,11 +58,11 @@ class Chat extends Component {
           online={otherUser.online}
           sidebar={true}
         />
-        <ChatContent conversation={this.props.conversation} />
+        <ChatContent conversation={this.props.conversation} messageCountBool = {messageCount ? true : false}/>
         {messageCount &&
           <Box
             className={classes.notification}
-          >{messageCount}</Box>
+          >{1}</Box>
         }
       </Box>
     );

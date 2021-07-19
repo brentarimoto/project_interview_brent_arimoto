@@ -42,7 +42,6 @@ io.on("connection", (socket) => {
   });
 
   socket.on("new-message", (data) => {
-    console.log(data.senderUsername)
     socket.to(data.recipientId).emit("new-message", {
       message: data.message,
       sender: data.sender,
