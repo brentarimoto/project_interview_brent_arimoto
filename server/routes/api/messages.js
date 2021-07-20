@@ -73,8 +73,7 @@ router.put("/", async (req, res, next) => {
 
     readMessages.forEach(async (id)=>{
       const message = await Message.findByPk(id)
-      message.read=true
-      await message.save()
+      await message.update({read:true})
     })
 
     res.json({userId});
