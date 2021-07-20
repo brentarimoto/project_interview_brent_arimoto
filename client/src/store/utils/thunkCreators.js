@@ -7,6 +7,7 @@ import {
   setSearchedUsers,
   readConversation,
 } from "../conversations";
+import { setLatestReadMessage } from "../latestReadMessage";
 import { gotUser, setFetchingStatus } from "../user";
 
 axios.interceptors.request.use(async function (config) {
@@ -93,11 +94,12 @@ const sendMessage = (data, body) => {
   });
 };
 
-const sendReadStatus = (data, body) => {
+const sendReadStatus = (readMessages, userId, otherUserId, otherUserUsername) => {
   socket.emit("read-messages", {
-    readMessages: body.readMessages,
-    userId: body.otherUserId,
-    otherUserId: data.userId
+    readMessages,
+    userId,
+    otherUserId,
+    otherUserUsername,
   });
 };
 
@@ -121,13 +123,14 @@ export const postMessage = (body) => async (dispatch) => {
 
 
 // Sets all specified messages to read in backend and redux, sets socket emit to other user as well
-export const readMessages = (body) => async (dispatch) => {
+export const readMessages = (body) => async (dispatch, getState) => {
   try {
+    const state = getState()
     const { data } = await axios.put("/api/messages", body);
 
     dispatch(readConversation(body.otherUserId, body.readMessages))
 
-    sendReadStatus(data, body)
+    sendReadStatus(body.readMessages, body.otherUserId, data.userId, state.user.username)
 
   } catch (error) {
     console.error(error);
@@ -140,11 +143,20 @@ export const handleNewMessage = ({message, sender, senderUsername}) => async (di
 
   if (state.activeConversation === senderUsername){
     message.read = true
-    sendReadStatus({userId: state.user.id}, {otherUserId:message.senderId, readMessages:[message.id]})
+    sendReadStatus([message.id], message.senderId, state.user.id, state.user.username)
   }
 
   dispatch(setNewMessage(message, sender))
 };
+
+export const handleConvoRead = (body) => async (dispatch, getState) => {
+  const state = getState()
+  const conversations = state.conversations
+  console.log(body)
+
+  dispatch(readConversation(body.otherUserId, body.readMessages))
+  dispatch(setLatestReadMessage(body.otherUserUsername, body.readMessages[0]))
+}
 
 export const searchUsers = (searchTerm) => async (dispatch) => {
   try {

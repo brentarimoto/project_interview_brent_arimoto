@@ -35,6 +35,7 @@ const styles = {
 };
 
 class Chat extends Component {
+
   handleClick = async (conversation, userId) => {
     await this.props.setActiveChat(conversation.otherUser.username);
   };
@@ -47,7 +48,6 @@ class Chat extends Component {
     const messageCount = this.props.conversation.messages.filter((message)=>{
       return !message.read && message.senderId !== userId
     }).length || null
-    console.log(messageCount)
 
     return (
       <Box

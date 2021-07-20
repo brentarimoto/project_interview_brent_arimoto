@@ -1,12 +1,10 @@
 import io from "socket.io-client";
 import store from "./store";
 import {
-  setNewMessage,
   removeOfflineUser,
   addOnlineUser,
-  readConversation,
 } from "./store/conversations";
-import { handleNewMessage } from './store/utils/thunkCreators'
+import { handleNewMessage, handleConvoRead } from './store/utils/thunkCreators'
 
 const socket = io(window.location.origin);
 
@@ -23,11 +21,11 @@ socket.on("connect", () => {
 
   socket.on("new-message", (data) => {
     store.dispatch(handleNewMessage(data))
-    // store.dispatch(setNewMessage(data.message, data.sender));
   });
 
   socket.on("read-messages", (data) => {
-    store.dispatch(readConversation(data.otherUserId, data.readMessages));
+    console.log('READ MESSAGES')
+    store.dispatch(handleConvoRead(data));
   });
 });
 
