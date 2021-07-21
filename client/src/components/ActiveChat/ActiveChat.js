@@ -1,8 +1,10 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import { Box } from "@material-ui/core";
 import { Input, Header, Messages } from "./index";
-import { connect } from "react-redux";
+import { connect, useDispatch } from "react-redux";
+import { readConvo } from "../../store/utils/thunkCreators";
+import { setLatestReadMessage } from "../../store/latestReadMessage";
 
 const useStyles = makeStyles(() => ({
   root: {
@@ -25,9 +27,47 @@ const useStyles = makeStyles(() => ({
 }));
 
 const ActiveChat = (props) => {
+
+  const dispatch = useDispatch()
+
   const classes = useStyles();
-  const { user } = props;
+  const { user, activeConversation, latestReadMessage } = props;
   const conversation = props.conversation || {};
+
+  useEffect(()=>{
+    if(activeConversation){
+      (async()=>{
+        const messageIds = []
+        conversation.messages.every((message)=>{
+          if (message.read && message.senderId !== user.id){
+            return false
+          } else{
+            if (!message.read && message.senderId !== user.id){
+              messageIds.push(message.id)
+            }
+            return true
+          }
+        })
+
+        if (messageIds.length){
+          await dispatch(readConvo({otherUserId: conversation.otherUser.id, readMessages:messageIds}))
+        }
+      })()
+
+      if (latestReadMessage[activeConversation]===undefined){
+        let messageId;
+        conversation.messages?.every((message)=>{
+          if(message.senderId===user.id && message.read){
+            messageId = message.id
+            return false
+          } else{
+            return true
+          }
+        })
+        dispatch(setLatestReadMessage(activeConversation, messageId))
+      }
+    }
+  },[activeConversation])
 
   return (
     <Box className={classes.root}>
@@ -42,6 +82,7 @@ const ActiveChat = (props) => {
               messages={conversation.messages}
               otherUser={conversation.otherUser}
               userId={user.id}
+              latestReadMessageId={latestReadMessage[activeConversation]}
             />
             <Input
               otherUser={conversation.otherUser}
@@ -62,7 +103,9 @@ const mapStateToProps = (state) => {
       state.conversations &&
       state.conversations.find(
         (conversation) => conversation.otherUser.username === state.activeConversation
-      )
+      ),
+    activeConversation:state.activeConversation,
+    latestReadMessage: state.latestReadMessage
   };
 };
 

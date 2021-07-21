@@ -22,6 +22,7 @@ const useStyles = makeStyles(() => ({
 const Sidebar = (props) => {
   const classes = useStyles();
   const conversations = props.conversations || [];
+  const userId = props.userId
   const { handleChange, searchTerm } = props;
 
   return (
@@ -32,7 +33,7 @@ const Sidebar = (props) => {
       {conversations
         .filter((conversation) => conversation.otherUser.username.includes(searchTerm))
         .map((conversation) => {
-          return <Chat conversation={conversation} key={conversation.otherUser.username} />;
+          return <Chat conversation={conversation} key={conversation.otherUser.username} userId={userId}/>;
         })}
     </Box>
   );
@@ -40,6 +41,7 @@ const Sidebar = (props) => {
 
 const mapStateToProps = (state) => {
   return {
+    userId: state.user.id,
     conversations: state.conversations
   };
 };

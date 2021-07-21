@@ -1,10 +1,10 @@
 import io from "socket.io-client";
 import store from "./store";
 import {
-  setNewMessage,
   removeOfflineUser,
   addOnlineUser,
 } from "./store/conversations";
+import { handleNewMessage, handleConvoRead } from './store/utils/thunkCreators'
 
 const socket = io(window.location.origin);
 
@@ -18,8 +18,13 @@ socket.on("connect", () => {
   socket.on("remove-offline-user", (id) => {
     store.dispatch(removeOfflineUser(id));
   });
+
   socket.on("new-message", (data) => {
-    store.dispatch(setNewMessage(data.message, data.sender));
+    store.dispatch(handleNewMessage(data))
+  });
+
+  socket.on("read-messages", (data) => {
+    store.dispatch(handleConvoRead(data));
   });
 });
 
