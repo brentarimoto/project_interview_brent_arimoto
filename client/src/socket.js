@@ -24,7 +24,6 @@ socket.on("connect", () => {
   });
 
   socket.on("read-messages", (data) => {
-    console.log('READ MESSAGES')
     store.dispatch(handleConvoRead(data));
   });
 });

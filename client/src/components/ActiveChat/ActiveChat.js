@@ -50,16 +50,22 @@ const ActiveChat = (props) => {
         })
 
         if (messageIds.length){
-          await dispatch(readMessages({otherUserId: conversation.otherUser.id, readMessages:messageIds, }))
+          await dispatch(readMessages({otherUserId: conversation.otherUser.id, readMessages:messageIds}))
         }
       })()
-    }
 
-    if (latestReadMessage[activeConversation]===undefined){
-      const messageId = conversation.messages?.find((message)=>{
-        return message.senderId===user.id && message.read
-      })?.id || null
-      dispatch(setLatestReadMessage(activeConversation, messageId))
+      if (latestReadMessage[activeConversation]===undefined){
+        let messageId;
+        conversation.messages?.every((message)=>{
+          if(message.senderId===user.id && message.read){
+            messageId = message.id
+            return false
+          } else{
+            return true
+          }
+        })
+        dispatch(setLatestReadMessage(activeConversation, messageId))
+      }
     }
   },[activeConversation])
 
