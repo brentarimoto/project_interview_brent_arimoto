@@ -13,10 +13,7 @@ router.post("/", async (req, res, next) => {
     const { recipientId, text, conversationId, sender } = req.body;
 
     // find a conversation between sender and recipient
-    let conversation = await Conversation.findConversation(
-      senderId,
-      recipientId
-      );
+    let conversation = await Conversation.findByPk(conversationId);
 
     // if conversation does not exits, make a conversation
     if (!conversation) {
@@ -43,7 +40,7 @@ router.post("/", async (req, res, next) => {
       return res.json({ message, sender });
 
     // if conversation exists, and it matches the id of the conversationId stated, then user can make message
-    } else if (conversation.id === conversationId){
+    } else if ((conversation.user1Id===senderId || conversation.user2Id===senderId) && (conversation.user1Id===recipientId || conversation.user2Id===recipientId)){
       const message = await Message.create({ senderId, text, conversationId });
       return res.json({ message, sender });
 
