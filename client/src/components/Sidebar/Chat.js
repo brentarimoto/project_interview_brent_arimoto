@@ -37,9 +37,11 @@ const styles = {
 class Chat extends Component {
   constructor(props){
     super(props);
-    this.messageCount=this.props.conversation.messages.filter((message)=>{
-      return !message.read && message.senderId !== this.props.userId
-    }).length || null
+    this.state={
+      messageCount:this.props.conversation.messages.filter((message)=>{
+        return !message.read && message.senderId !== this.props.userId
+      }).length || null,
+    }
   }
 
   handleClick = async (conversation, userId) => {
@@ -48,13 +50,13 @@ class Chat extends Component {
 
   componentDidUpdate(prevProps){
     if(this.props.conversation.messages !== prevProps.conversation.messages){
-      this.messageCount=this.props.conversation.messages.filter((message)=>{
-        return !message.read && message.senderId !== this.props.userId
-      }).length || null
-      console.log(this.messageCount)
+      this.setState((state, props)=>{
+        return {messageCount: props.conversation.messages.filter((message)=>{
+          return !message.read && message.senderId !== props.userId
+        }).length || null}
+      })
     }
   }
-
 
   render() {
     const { classes, userId } = this.props;
@@ -71,11 +73,11 @@ class Chat extends Component {
           online={otherUser.online}
           sidebar={true}
         />
-        <ChatContent conversation={this.props.conversation} messageCountBool = {this.messageCount ? true : false}/>
-        {this.messageCount &&
+        <ChatContent conversation={this.props.conversation} messageCountBool = {this.state.messageCount ? true : false}/>
+        {this.state.messageCount &&
           <Box
             className={classes.notification}
-          >{this.messageCount}</Box>
+          >{this.state.messageCount}</Box>
         }
       </Box>
     );
