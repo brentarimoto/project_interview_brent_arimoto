@@ -79,4 +79,25 @@ router.get("/", async (req, res, next) => {
   }
 });
 
+// expects { readMessages } in body
+router.put("/read", async (req, res, next) => {
+  try {
+    if (!req.user) {
+      return res.sendStatus(401);
+    }
+
+    const userId = req.user.id;
+    const { readMessages } = req.body;
+
+    readMessages.forEach(async (id)=>{
+      const message = await Message.findByPk(id)
+      await message.update({read:true})
+    })
+
+    res.json({userId});
+  } catch (error) {
+    next(error);
+  }
+});
+
 module.exports = router;

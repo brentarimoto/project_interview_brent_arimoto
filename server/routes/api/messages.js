@@ -58,25 +58,4 @@ router.post("/", async (req, res, next) => {
 });
 
 
-// expects {id } in body
-router.put("/", async (req, res, next) => {
-  try {
-    if (!req.user) {
-      return res.sendStatus(401);
-    }
-
-    const userId = req.user.id;
-    const { readMessages } = req.body;
-
-    readMessages.forEach(async (id)=>{
-      const message = await Message.findByPk(id)
-      await message.update({read:true})
-    })
-
-    res.json({userId});
-  } catch (error) {
-    next(error);
-  }
-});6
-
 module.exports = router;

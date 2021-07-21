@@ -123,10 +123,10 @@ export const postMessage = (body) => async (dispatch) => {
 
 
 // Sets all specified messages to read in backend and redux, sets socket emit to other user as well
-export const readMessages = (body) => async (dispatch, getState) => {
+export const readConvo = (body) => async (dispatch, getState) => {
   try {
     const state = getState()
-    await axios.put("/api/messages", body);
+    await axios.put("/api/conversations/read", body);
 
     dispatch(readConversation(body.otherUserId, body.readMessages))
 
@@ -143,13 +143,14 @@ export const handleNewMessage = ({message, sender, senderUsername}) => async (di
 
   if (state.activeConversation === senderUsername){
     message.read = true
-    await axios.put("/api/messages", {readMessages:[message.id]});
+    await axios.put("/api/conversations/read", {readMessages:[message.id]});
     sendReadStatus([message.id], message.senderId, state.user.id, state.user.username)
   }
 
   dispatch(setNewMessage(message, sender))
 };
 
+// Handles when other user has read a conversation
 export const handleConvoRead = (body) => async (dispatch) => {
 
   dispatch(readConversation(body.otherUserId, body.readMessages))

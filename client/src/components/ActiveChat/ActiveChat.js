@@ -3,7 +3,7 @@ import { makeStyles } from "@material-ui/core/styles";
 import { Box } from "@material-ui/core";
 import { Input, Header, Messages } from "./index";
 import { connect, useDispatch } from "react-redux";
-import { readMessages } from "../../store/utils/thunkCreators";
+import { readConvo } from "../../store/utils/thunkCreators";
 import { setLatestReadMessage } from "../../store/latestReadMessage";
 
 const useStyles = makeStyles(() => ({
@@ -50,7 +50,7 @@ const ActiveChat = (props) => {
         })
 
         if (messageIds.length){
-          await dispatch(readMessages({otherUserId: conversation.otherUser.id, readMessages:messageIds}))
+          await dispatch(readConvo({otherUserId: conversation.otherUser.id, readMessages:messageIds}))
         }
       })()
 
