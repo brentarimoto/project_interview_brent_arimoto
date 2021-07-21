@@ -1,4 +1,4 @@
-import { createStore, applyMiddleware, combineReducers } from "redux";
+import { createStore, applyMiddleware, combineReducers, compose } from "redux";
 import loggerMiddleware from "redux-logger";
 import thunkMiddleware from "redux-thunk";
 
@@ -27,4 +27,14 @@ const rootReducer = (state, action) => {
   return appReducer(state, action);
 };
 
-export default createStore(rootReducer, applyMiddleware(thunkMiddleware, loggerMiddleware));
+let enhancer;
+
+if (process.env.NODE_ENV === 'production') {
+    enhancer = applyMiddleware(thunkMiddleware);
+} else {
+    const composeEnhancers =
+        window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
+    enhancer = composeEnhancers(applyMiddleware(thunkMiddleware, loggerMiddleware));
+}
+
+export default createStore(rootReducer, enhancer);
