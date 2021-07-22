@@ -46,7 +46,6 @@ const Chat = (props)=>{
     }).length || null
   )
 
-
   useEffect(()=>{
     setMessageCount(conversation.messages.filter((message)=>{
       return !message.read && message.senderId !== props.userId
