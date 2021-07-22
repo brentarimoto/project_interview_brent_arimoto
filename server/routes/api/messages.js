@@ -25,7 +25,7 @@ router.post("/", async (req, res, next) => {
       });
 
       // set sender as online
-      if (onlineUsers.includes(sender.id)) {
+      if (onlineUsers.has(sender.id)) {
         sender.online = true;
       }
 

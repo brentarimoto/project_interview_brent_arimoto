@@ -67,7 +67,7 @@ const Chat = (props)=>{
         online={otherUser.online}
         sidebar={true}
       />
-      <ChatContent conversation={conversation} hasUnreadMessages = {messageCount ? true : false}/>
+      <ChatContent conversation={conversation} hasUnreadMessages = {!!messageCount}/>
       {messageCount &&
         <Box
           className={classes.notification}

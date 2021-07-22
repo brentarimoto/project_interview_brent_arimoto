@@ -25,6 +25,7 @@ export const fetchUser = () => async (dispatch) => {
     const { data } = await axios.get("/auth/user");
     dispatch(gotUser(data));
     if (data.id) {
+      socket.connect()
       socket.emit("go-online", data.id);
     }
   } catch (error) {
@@ -39,6 +40,7 @@ export const register = (credentials) => async (dispatch) => {
     const { data } = await axios.post("/auth/register", credentials);
     await localStorage.setItem("messenger-token", data.token);
     dispatch(gotUser(data));
+    socket.connect()
     socket.emit("go-online", data.id);
   } catch (error) {
     console.error(error);
@@ -51,6 +53,7 @@ export const login = (credentials) => async (dispatch) => {
     const { data } = await axios.post("/auth/login", credentials);
     await localStorage.setItem("messenger-token", data.token);
     dispatch(gotUser(data));
+    socket.connect()
     socket.emit("go-online", data.id);
   } catch (error) {
     console.error(error);
@@ -64,6 +67,7 @@ export const logout = (id) => async (dispatch) => {
     await localStorage.removeItem("messenger-token");
     dispatch(gotUser({}));
     socket.emit("logout", id);
+    socket.disconnect()
   } catch (error) {
     console.error(error);
   }
@@ -90,7 +94,7 @@ const sendMessage = (data, body) => {
     message: data.message,
     recipientId: body.recipientId,
     sender: data.sender,
-    senderUsername: body.senderUsername
+    senderUsername: body.senderUsername,
   });
 };
 
