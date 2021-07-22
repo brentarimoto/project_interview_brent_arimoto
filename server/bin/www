@@ -35,6 +35,7 @@ const io = require("socket.io")(server);
 
 io.use((socket, next)=>{
   const token = socket.handshake.auth.token
+  console.log(token)
   if (token) {
     jwt.verify(token, process.env.SESSION_SECRET, async (err, decoded) => {
       if (err) {
@@ -43,6 +44,8 @@ io.use((socket, next)=>{
       const user = await User.findByPk(decoded.id)
       if (!user) {
         return next(new Error('User Does Not Exist'));
+      } else{
+        next()
       }
     });
   } else {
@@ -80,7 +83,7 @@ io.on("connection", (socket) => {
   socket.on("logout", (id) => {
     socket.leave(id)
     if (onlineUsers.has(id)) {
-      onlineUsers.remove(id);
+      onlineUsers.delete(id);
       socket.broadcast.emit("remove-offline-user", id);
     }
   });
