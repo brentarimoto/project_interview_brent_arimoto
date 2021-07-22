@@ -107,7 +107,6 @@ const sendReadStatus = (readMessages, userId, otherUserId, otherUserUsername) =>
 // conversationId will be set to null if its a brand new conversation
 export const postMessage = (body) => async (dispatch) => {
   try {
-    console.log(body)
     const data = await saveMessage(body);
 
     if (!body.conversationId) {
