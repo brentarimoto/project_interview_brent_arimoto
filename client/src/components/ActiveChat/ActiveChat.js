@@ -8,9 +8,8 @@ import { setLatestReadMessage } from "../../store/latestReadMessage";
 
 const useStyles = makeStyles(() => ({
   root: {
-    display: "flex",
+    display: "grid",
     flexGrow: 8,
-    flexDirection: "column",
     height: '100%'
   },
   chatContainer: {
@@ -48,7 +47,6 @@ const ActiveChat = (props) => {
             return true
           }
         })
-
         if (messageIds.length){
           await dispatch(readConvo({otherUserId: conversation.otherUser.id, readMessages:messageIds}))
         }
