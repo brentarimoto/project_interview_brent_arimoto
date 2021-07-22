@@ -121,7 +121,6 @@ export const postMessage = (body) => async (dispatch) => {
   }
 };
 
-
 // Sets all specified messages to read in backend and redux, sets socket emit to other user as well
 export const readConvo = (body) => async (dispatch, getState) => {
   try {
