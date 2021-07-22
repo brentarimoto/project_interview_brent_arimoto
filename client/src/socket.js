@@ -6,7 +6,7 @@ import {
 } from "./store/conversations";
 import { handleNewMessage, handleConvoRead } from './store/utils/thunkCreators'
 
-const socket = io(window.location.origin);
+const socket = io(window.location.origin,{auth: {token: localStorage.getItem("messenger-token")}});
 
 socket.on("connect", () => {
   console.log("connected to server");

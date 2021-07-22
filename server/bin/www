@@ -10,7 +10,8 @@ require("dotenv").config();
 const { app, sessionStore } = require("../app");
 const http = require("http");
 const db = require("../db");
-const { Message } = require("../db/models");
+const jwt = require("jsonwebtoken");
+const { User, Message } = require("../db/models");
 const onlineUsers = require("../onlineUsers");
 
 /**
@@ -32,11 +33,28 @@ const server = http.createServer(app);
 
 const io = require("socket.io")(server);
 
+io.use((socket, next)=>{
+  const token = socket.handshake.auth.token
+  if (token) {
+    jwt.verify(token, process.env.SESSION_SECRET, async (err, decoded) => {
+      if (err) {
+        return next(new Error('Authorization Error'));
+      }
+      const user = await User.findByPk(decoded.id)
+      if (!user) {
+        return next(new Error('User Does Not Exist'));
+      }
+    });
+  } else {
+    return next(new Error('User Not Logged In'));
+  }
+})
+
 io.on("connection", (socket) => {
   socket.on("go-online", (id) => {
     socket.join(id)
-    if (!onlineUsers.includes(id)) {
-      onlineUsers.push(id);
+    if (!onlineUsers.has(id)) {
+      onlineUsers.add(id);
     }
     // send the user who just went online to everyone else who is already online
     socket.broadcast.emit("add-online-user", id);
@@ -56,21 +74,13 @@ io.on("connection", (socket) => {
 
   socket.on("read-messages", (data) => {
     // Checks is read messages are actually sent by senderId (security mesasure)
-    let validReadStatus = data.readMessages.every(async (id)=>{
-      const message = await Message.findByPk(id)
-      return message.senderId===data.otherUserId
-    })
-
-    if (validReadStatus){
-      socket.to(data.userId).emit("read-messages", data);
-    }
+    socket.to(data.userId).emit("read-messages", data);
   });
 
   socket.on("logout", (id) => {
     socket.leave(id)
-    if (onlineUsers.includes(id)) {
-      userIndex = onlineUsers.indexOf(id);
-      onlineUsers.splice(userIndex, 1);
+    if (onlineUsers.has(id)) {
+      onlineUsers.remove(id);
       socket.broadcast.emit("remove-offline-user", id);
     }
   });
