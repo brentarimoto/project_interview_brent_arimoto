@@ -107,6 +107,7 @@ const sendReadStatus = (readMessages, userId, otherUserId, otherUserUsername) =>
 // conversationId will be set to null if its a brand new conversation
 export const postMessage = (body) => async (dispatch) => {
   try {
+    console.log(body)
     const data = await saveMessage(body);
 
     if (!body.conversationId) {
@@ -120,7 +121,6 @@ export const postMessage = (body) => async (dispatch) => {
     console.error(error);
   }
 };
-
 
 // Sets all specified messages to read in backend and redux, sets socket emit to other user as well
 export const readConvo = (body) => async (dispatch, getState) => {
