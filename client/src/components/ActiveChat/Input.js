@@ -30,20 +30,18 @@ const Input = (props)=>{
     setText(event.target.value)
   };
 
-  const handleSubmit = (event) => {
+  const handleSubmit = async (event) => {
     event.preventDefault();
-    (async()=>{
-      // add sender user info if posting to a brand new convo, so that the other user will have access to username, profile pic, etc.
-      const reqBody = {
-        text: event.target.text.value,
-        recipientId: otherUser.id,
-        conversationId: conversationId,
-        sender: conversationId ? null : user,
-        senderUsername: user.username
-      };
-      await dispatch(postMessage(reqBody));
-      setText("")
-    })()
+    // add sender user info if posting to a brand new convo, so that the other user will have access to username, profile pic, etc.
+    const reqBody = {
+      text: event.target.text.value,
+      recipientId: otherUser.id,
+      conversationId: conversationId,
+      sender: conversationId ? null : user,
+      senderUsername: user.username
+    };
+    await dispatch(postMessage(reqBody));
+    setText("")
   };
 
   return (
@@ -61,6 +59,5 @@ const Input = (props)=>{
     </form>
   );
 }
-
 
 export default withStyles(styles)(Input);

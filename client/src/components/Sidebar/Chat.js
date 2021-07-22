@@ -58,7 +58,7 @@ const Chat = (props)=>{
 
   return (
     <Box
-      onClick={() => handleClick(conversation, userId)}
+      onClick={() => handleClick(conversation)}
       className={classes.root}
     >
       <BadgeAvatar
@@ -67,7 +67,7 @@ const Chat = (props)=>{
         online={otherUser.online}
         sidebar={true}
       />
-      <ChatContent conversation={conversation} messageCountBool = {messageCount ? true : false}/>
+      <ChatContent conversation={conversation} hasUnreadMessages = {messageCount ? true : false}/>
       {messageCount &&
         <Box
           className={classes.notification}
