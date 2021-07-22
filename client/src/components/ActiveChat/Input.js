@@ -41,7 +41,6 @@ const Input = (props)=>{
         sender: conversationId ? null : user,
         senderUsername: user.username
       };
-      console.log(reqBody)
       await dispatch(postMessage(reqBody));
       setText("")
     })()
