@@ -3,7 +3,7 @@ import { Box } from "@material-ui/core";
 import { BadgeAvatar, ChatContent } from "../Sidebar";
 import { withStyles } from "@material-ui/core/styles";
 import { setActiveChat } from "../../store/activeConversation";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 import { theme } from "../../themes/theme";
 
 const styles = {
@@ -42,13 +42,13 @@ const Chat = (props)=>{
 
   const [messageCount, setMessageCount] = useState(
     conversation.messages.filter((message)=>{
-      return !message.read && message.senderId !== props.userId
+      return !message.read && message.senderId !== userId
     }).length || null
   )
 
   useEffect(()=>{
     setMessageCount(conversation.messages.filter((message)=>{
-      return !message.read && message.senderId !== props.userId
+      return !message.read && message.senderId !== userId
     }).length || null,)
   },[conversation.messages])
 
